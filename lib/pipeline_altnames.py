@@ -1,26 +1,4 @@
-import os
-from jobli2.joblib import Memory as DiskMemorize
-from jobli2.joblib import Jlstream
 
-adirProj=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-adirJoblib=os.path.join(adirProj, "cache", "joblib")
-dmem = DiskMemorize(adirJoblib)
-
-def pass_stream():
-    return Jlstream(lambda : (x for x in range(0,3)))
-
-def _fetch_mesh_to_unii():
-    # query
-    #     https://id.nlm.nih.gov/mesh/query?query=PREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E%0D%0APREFIX+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0D%0APREFIX+meshv%3A+%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23%3E%0D%0APREFIX+mesh%3A+%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F%3E%0D%0APREFIX+mesh2022%3A+%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F2022%2F%3E%0D%0APREFIX+mesh2021%3A+%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F2021%2F%3E%0D%0APREFIX+mesh2020%3A+%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F2020%2F%3E%0D%0A%0D%0ASELECT+distinct+%3Fmesh+%3FmeshLabel+%3Fr+%3Frr%0D%0AFROM+%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%3E+WHERE+%7B%0D%0A++%3Fmesh+meshv%3Aactive+1+.%0D%0A++%3Fmesh+meshv%3ApreferredMappedTo+%3Fp+.%0D%0A++%3Fp+meshv%3AtreeNumber+%3FtreeNum+.%0D%0A++FILTER%28STRSTARTS%28STR%28%3FtreeNum%29%2C+%22http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2FD%22%29%29+.%0D%0A++%3Fmesh+rdfs%3Alabel+%3FmeshLabel+.%0D%0A++%3Fmesh+meshv%3ApreferredConcept+%5Bmeshv%3AregistryNumber+%3Fr%5D+.%0D%0A++OPTIONAL+%7B%3Fmesh+meshv%3ApreferredConcept+%5Bmeshv%3ArelatedRegistryNumber+%3Frr%5D%7D%0D%0A%7D+limit+50%0D%0A&format=HTML&year=current&limit=50&offset=0#lodestart-sparql-results
-
-    # regex columns ?r and ?rr to look like a UNII
-
-    # collect all matching (meshid, UNII) pairs
-
-    #     NTH: include max one meshLabel
-    return pass_stream()
-
-fetch_mesh_to_unii = dmem.cache(_fetch_mesh_to_unii)
 
 def gather_pubtator_chem_altnames():
     # zcat /data/chemical2pubtatorcentral_2022-08-05.gz | ~/bin/reservoir.pl 20
