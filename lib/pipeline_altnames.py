@@ -106,7 +106,7 @@ def gather_human_orthologs():
     #     9544    17578
     pass
 
-def gather_pubtator_chem_altnames():
+def gather_pubtator_gene_altnames():
     # zcat /data/gene2pubtatorcentral_2022-09-15.gz | pv | ~/bin/reservoir.pl 20
     #     34456932	Gene	838452	PYL9|RCAR1	GNormPlus
     #     10074924	Gene	2099	estrogen receptor	GNormPlus
