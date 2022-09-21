@@ -1,4 +1,6 @@
 
+# TODO:
+#     fetch_mesh_to_only_unii()
 
 def gather_pubtator_chem_altnames():
     # zcat /data/chemical2pubtatorcentral_2022-08-05.gz | ~/bin/reservoir.pl 20
@@ -49,40 +51,8 @@ def gather_taxomy_names():
     #     2845822	|	Aquabacterium sp. CECT 9606	|		|	scientific name	|
     pass
 
-
-def gather_human_orthologs():
-    # https://ftp.ncbi.nih.gov/gene/DATA/gene_orthologs.gz
-
-    # zcat ~/Downloads/gene_orthologs.gz | head
-    #     #tax_id     GeneID  relationship    Other_tax_id    Other_GeneID
-    #     7955        30037   Ortholog        7830    119955596
-    #     7955        30037   Ortholog        7897    102366554
-    #     7955        30037   Ortholog        7936    118206824
-    #     7955        30037   Ortholog        7994    103038481
-    #     7955        30037   Ortholog        7998    108255935
-    #     7955        30037   Ortholog        8005    113577924
-    #     7955        30037   Ortholog        8010    105014395
-    #     7955        30037   Ortholog        8049    115554508
-    #     7955        30037   Ortholog        8078    105915626
-
-    # zcat ~/Downloads/gene_orthologs.gz | perl -ne 'chomp($_); @F=split(/\t/,$_,-1); $s=$F[0]; $o=$F[3]; print "$s\n$o\n";' | tsv-summarize --group-by 1 --count | sort -n -r -k2,2 | less
-
-    #     9606    5976738
-    #     7955    802861
-    #     75352   19671
-    #     1606681 19255
-    #     90988   19008
-    #     42514   18836
-    #     42526   18743
-    #     7994    18687
-    #     8005    18183
-    #     9598    17762
-    #     310915  17747
-    #     9597    17666
-    #     29144   17621
-    #     9601    17587
-    #     9544    17578
-    pass
+# TODO:
+#     gather_human_orthologs()
 
 def gather_pubtator_gene_altnames():
     # zcat /data/gene2pubtatorcentral_2022-09-15.gz | pv | ~/bin/reservoir.pl 20
