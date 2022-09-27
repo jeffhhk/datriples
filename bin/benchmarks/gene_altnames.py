@@ -34,7 +34,7 @@ def main():
 
     print("pubtator_gene_altnames={}".format(tmp))
 
-    for (k,v) in reservoir(pubtator_gene_altnames().items(), 25, random.Random(123)):
+    for (k,v) in reservoir(pubtator_gene_altnames().items(), 20, random.Random(123)):
         v = sorted(v, key=lambda v:-v[1])
         print("{} => {}".format(k,v))
 
