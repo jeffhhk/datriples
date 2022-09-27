@@ -11,6 +11,8 @@ from lib.diskgenmem import *
 from lib.gene_altnames import *
 from lib.mytime import *
 from lib.re_sub import sub_all_plain_string
+from lib.reservoir import reservoir
+import random
 
 re_name=re.compile(r"[^\(\)a-zA-Z0-9]+")
 
@@ -32,8 +34,7 @@ def main():
 
     print("pubtator_gene_altnames={}".format(tmp))
 
-    # TODO: print a random sample for spot checking, not the first rows
-    for (k,v) in itertools.islice(pubtator_gene_altnames().items(), 10):
+    for (k,v) in reservoir(pubtator_gene_altnames().items(), 25, random.Random(123)):
         v = sorted(v, key=lambda v:-v[1])
         print("{} => {}".format(k,v))
 
