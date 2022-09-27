@@ -62,15 +62,28 @@ def sessionize_by_pmid(relf):
         sess.append(row)
     yield sess
 
+def does_row_contain_single_gene(row):
+    geneid=row[cidGeneid]
+    return (
+        geneid != "None"                  # phrase is a gene, but gene ID is not detected   (1 in 1212 rows).  Example:
+            # 35660018	Gene	None	O-linked beta-N-acetylglucosamine transferase|Myb	GNormPlus
+        and not geneid.__contains__(";")  # phrase is constructed to include multiple genes (1.2% of rows).  Examples:
+            # ['28555004', 'Gene', '3065;3066;8841', 'Histone deacetylases 1, 2 and 3', 'GNormPlus']
+            # ['30666004', 'Gene', '3605;112744', 'interleukin-17A and -17F', 'GNormPlus']
+    )
+
+
 # Deduplicate so that counts become counts of separate articles
 def sess_dedupe(sess):
     h={}
     for row in sess:
-        geneid=row[cidGeneid]
-        names=row[cidNames].split("|")
-        for name in names:
-            if (geneid, name) not in h:
-                h[(geneid,name)] = True
+        if does_row_contain_single_gene(row):
+            geneid=row[cidGeneid]
+            geneid=int(geneid)
+            names=row[cidNames].split("|")
+            for name in names:
+                if (geneid, name) not in h:
+                    h[(geneid,name)] = True
     return h.keys()
 
 def parse_gene_altnames(relf):

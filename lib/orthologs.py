@@ -89,16 +89,15 @@ def parse_orth4(relf):
 def filter_orth(relf):
     for orth in parse_orth(relf):
         if orth.rel == "Ortholog":
-            yield orth
+            yield Orth(int(orth.taxid1), int(orth.geneid1), orth.rel, int(orth.taxid2), int(orth.geneid2))
 
 taxid_human = 9606
 
 def gather_human_orthologs(relf):
-    sttaxid_human=str(taxid_human)
     for orth in filter_orth(relf):
-        if orth.taxid1 == sttaxid_human and orth.taxid2 != sttaxid_human:
+        if orth.taxid1 == taxid_human and orth.taxid2 != taxid_human:
             yield orth
-        elif orth.taxid2 == sttaxid_human and orth.taxid1 != sttaxid_human:
+        elif orth.taxid2 == taxid_human and orth.taxid1 != taxid_human:
             yield Orth(orth.taxid2, orth.geneid2, orth.rel, orth.taxid1, orth.geneid1)
 
 
