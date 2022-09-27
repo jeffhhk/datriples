@@ -108,6 +108,6 @@ def gather_pubtator_gene_altnames(relf, fn_normalize):
         __add_multi_disjoint(h2, geneid, (name,num))
     print("starting pass 3")
     for (geneid, vs) in sorted(h2.items()):
-        yield (geneid, sorted(vs))
+        yield (geneid, sorted(vs, key=lambda v:-v[1]))
 
 
