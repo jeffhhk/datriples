@@ -99,7 +99,9 @@ def __add_multi_disjoint(T,k,v):
 def gather_pubtator_gene_altnames(relf, fn_normalize):
     h1={}
     for (geneid, name) in tqdm(parse_gene_altnames(relf)):
-        __count(h1, (geneid, fn_normalize(name)))
+        nname = fn_normalize(name)
+        if len(nname)>0:
+            __count(h1, (geneid, fn_normalize(name)))
     print("starting pass 2")
     h2={}
     for ((geneid, name),num) in tqdm(h1.items()):
