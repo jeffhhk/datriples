@@ -34,6 +34,7 @@ def main():
 
     # TODO: print a random sample for spot checking, not the first rows
     for (k,v) in itertools.islice(pubtator_gene_altnames().items(), 10):
+        v = sorted(v, key=lambda v:-v[1])
         print("{} => {}".format(k,v))
 
 if __name__ == '__main__':
