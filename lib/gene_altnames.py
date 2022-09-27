@@ -36,6 +36,7 @@ from tqdm import tqdm
 #     zcat /data/gene2pubtatorcentral_2022-09-15.gz | cut -f3 | time tsv-summarize --group-by 1 --count | wc -l
 #         875987
 
+cidPmid=0
 cidGeneid=2
 cidNames=3
 
@@ -46,14 +47,35 @@ def parse_gene_altnames_raw(relf):
     for line in proc.stdout:
         yield line.rstrip("\n").split("\t")
 
-def parse_gene_altnames(relf):
+def sessionize_by_pmid(relf):
+    pmidPrev=None
+    sess=[]
     it = parse_gene_altnames_raw(relf)
     it.__next__()               # TSV header
     for row in it:
+        pmid=row[cidPmid]
+        if pmid != pmidPrev and len(sess)>0:
+            yield sess
+            sess=[]
+        pmidPrev=pmid
+        sess.append(row)
+    yield sess
+
+def sess_dedupe(sess):
+    h={}
+    for row in sess:
         geneid=row[cidGeneid]
         names=row[cidNames].split("|")
         for name in names:
-            yield (geneid, name)
+            if (geneid, name) not in h:    # deduplicate so that counts are counts of separate articles
+                h[(geneid,name)] = True
+    return h.keys()
+
+def parse_gene_altnames(relf):
+    for sess in sessionize_by_pmid(relf):
+        sess2 = sess_dedupe(sess)
+        for geneid_name in sess2:
+            yield geneid_name
 
 def __count(T,k):
 #    k=(geneid,name)
