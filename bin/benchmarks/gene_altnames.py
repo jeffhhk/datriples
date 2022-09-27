@@ -19,7 +19,7 @@ def normalize_name(name):
     #print("name={}".format(name))
     #return re.sub(re_name, name, " ")  # name=NFKB1\2  => re.error: invalid group reference
     #return re_name.sub(name, " ")      # name=NFKB1\2  => re.error: invalid group reference
-    return sub_all_plain_string(re_name, name, " ")
+    return sub_all_plain_string(re_name, name, " ").rstrip().lstrip()
 
 dmem = DiskgenMem(os.path.join(adirProj, "cache", "managed", "derived"))
 pubtator_gene_altnames = DictMem(lambda:
