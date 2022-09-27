@@ -1,6 +1,7 @@
 import re
 import subprocess
 from tqdm import tqdm
+from lib.re_sub import *
 
 # zcat /data/gene2pubtatorcentral_2022-09-15.gz | pv | ~/bin/reservoir.pl 20
 #     34456932	Gene	838452	PYL9|RCAR1	GNormPlus
