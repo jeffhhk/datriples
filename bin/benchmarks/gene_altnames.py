@@ -12,7 +12,7 @@ from lib.gene_altnames import *
 from lib.mytime import *
 from lib.re_sub import sub_all_plain_string
 
-re_name=re.compile(r"[^a-zA-Z0-9]+")
+re_name=re.compile(r"[^\(\)a-zA-Z0-9]+")
 
 def normalize_name(name):
     #return re_name.sub(name.upper(),r" ")
