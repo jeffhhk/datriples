@@ -7,6 +7,7 @@ import re
 adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(adirProj)
 
+from lib.altname_paths import *
 from lib.diskgenmem import *
 from lib.gene_altnames import *
 from lib.mytime import *
@@ -23,11 +24,11 @@ def normalize_name(name):
     #return re_name.sub(name, " ")      # name=NFKB1\2  => re.error: invalid group reference
     return sub_all_plain_string(re_name, name, " ").rstrip().lstrip()
 
-dmem = DiskgenMem(os.path.join(adirProj, "cache", "managed", "derived"))
+dmem = make_dmem()
 pubtator_gene_altnames = DictMem(lambda:
     dmem.cache(
-        lambda: gather_pubtator_gene_altnames(os.path.join(adirProj, "cache", "external", "gene2pubtatorcentral_2022-09-15.gz"), normalize_name),
-        "pubtator_gene_altnames.gz")())
+        lambda: gather_pubtator_gene_altnames(absf_gene2pubtatorcentral, normalize_name),
+        absf_pubtator_gene_altnames)())
 
 def main():
     tmp=mytime(lambda: sum(1 for _ in pubtator_gene_altnames().keys()))
