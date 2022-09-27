@@ -15,19 +15,11 @@ from lib.re_sub import sub_all_plain_string
 from lib.reservoir import reservoir
 import random
 
-re_name=re.compile(r"[^\(\)a-zA-Z0-9]+")
-
-def normalize_name(name):
-    #return re_name.sub(name.upper(),r" ")
-    #print("name={}".format(name))
-    #return re.sub(re_name, name, " ")  # name=NFKB1\2  => re.error: invalid group reference
-    #return re_name.sub(name, " ")      # name=NFKB1\2  => re.error: invalid group reference
-    return sub_all_plain_string(re_name, name, " ").rstrip().lstrip()
 
 dmem = make_dmem()
 pubtator_gene_altnames = DictMem(lambda:
     dmem.cache(
-        lambda: gather_pubtator_gene_altnames(absf_gene2pubtatorcentral, normalize_name),
+        lambda: gather_pubtator_gene_altnames(absf_gene2pubtatorcentral, normalize_pubtator_gene_altname),
         absf_pubtator_gene_altnames)())
 
 def main():

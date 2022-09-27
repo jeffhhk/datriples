@@ -1,3 +1,4 @@
+import re
 import subprocess
 from tqdm import tqdm
 
@@ -93,6 +94,15 @@ def __add_multi_disjoint(T,k,v):
         vs = T[k]
         vs.append(v)
         T[k]=vs
+
+re_name=re.compile(r"[^\(\)a-zA-Z0-9]+")
+
+def normalize_pubtator_gene_altname(name):
+    #return re_name.sub(name.upper(),r" ")
+    #print("name={}".format(name))
+    #return re.sub(re_name, name, " ")  # name=NFKB1\2  => re.error: invalid group reference
+    #return re_name.sub(name, " ")      # name=NFKB1\2  => re.error: invalid group reference
+    return sub_all_plain_string(re_name, name, " ").rstrip().lstrip()
 
 # Group the data by geneid.  Report the results as a generator of (k,v) pairs so that they can
 # be cached with DiskgenMem.
