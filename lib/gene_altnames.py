@@ -1,4 +1,5 @@
 import subprocess
+from tqdm import tqdm
 
 # zcat /data/gene2pubtatorcentral_2022-09-15.gz | pv | ~/bin/reservoir.pl 20
 #     34456932	Gene	838452	PYL9|RCAR1	GNormPlus
@@ -53,23 +54,34 @@ def parse_gene_altnames(relf):
         name=row[cidName]
         yield (geneid, name)
 
-# TODO: add frequency
-def __add_multi(T,k,v):
+def __count(T,k):
+#    k=(geneid,name)
+    if k not in T:
+        T[k]=1
+    else:
+        num = T[k]
+        T[k] = num+1
+
+def __add_multi_disjoint(T,k,v):
     if k not in T:
         T[k]=[v]
     else:
         vs = T[k]
-        if v not in vs:
-            vs.append(v)
-            T[k]=vs
+        vs.append(v)
+        T[k]=vs
 
 # Group the data by geneid.  Report the results as a generator of (k,v) pairs so that they can
 # be cached with DiskgenMem.
 def gather_pubtator_gene_altnames(relf, fn_normalize):
-    T={}
-    for (geneid, name) in parse_gene_altnames(relf):
-        __add_multi(T, geneid, fn_normalize(name))
-    for k in sorted(T.keys()):
-        yield (k, sorted(T[k]))
+    h1={}
+    for (geneid, name) in tqdm(parse_gene_altnames(relf)):
+        __count(h1, (geneid, fn_normalize(name)))
+    print("starting pass 2")
+    h2={}
+    for ((geneid, name),num) in tqdm(h1.items()):
+        __add_multi_disjoint(h2, geneid, (name,num))
+    print("starting pass 3")
+    for (geneid, vs) in sorted(h2.items()):
+        yield (geneid, sorted(vs))
 
 
