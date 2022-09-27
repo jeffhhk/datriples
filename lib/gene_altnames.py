@@ -61,13 +61,14 @@ def sessionize_by_pmid(relf):
         sess.append(row)
     yield sess
 
+# Deduplicate so that counts become counts of separate articles
 def sess_dedupe(sess):
     h={}
     for row in sess:
         geneid=row[cidGeneid]
         names=row[cidNames].split("|")
         for name in names:
-            if (geneid, name) not in h:    # deduplicate so that counts are counts of separate articles
+            if (geneid, name) not in h:
                 h[(geneid,name)] = True
     return h.keys()
 
