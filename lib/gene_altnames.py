@@ -37,7 +37,7 @@ from tqdm import tqdm
 #         875987
 
 cidGeneid=2
-cidName=3
+cidNames=3
 
 def parse_gene_altnames_raw(relf):
     proc=subprocess.Popen(['zcat',relf],
@@ -51,8 +51,9 @@ def parse_gene_altnames(relf):
     it.__next__()               # TSV header
     for row in it:
         geneid=row[cidGeneid]
-        name=row[cidName]
-        yield (geneid, name)
+        names=row[cidNames].split("|")
+        for name in names:
+            yield (geneid, name)
 
 def __count(T,k):
 #    k=(geneid,name)
