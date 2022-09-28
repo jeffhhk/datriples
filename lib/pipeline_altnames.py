@@ -51,15 +51,6 @@ def gather_taxomy_names():
     #     2845822	|	Aquabacterium sp. CECT 9606	|		|	scientific name	|
     pass
 
-# TODO:
-#     gather_human_orthologs()
-
-# TODO:
-#     gather_pubtator_gene_altnames():
-
-def organize_altnames_by_human_gene():
-    pass
-
 def organize_altnames_by_unii():
     pass
 
