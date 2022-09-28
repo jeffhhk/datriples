@@ -30,3 +30,4 @@ absf_human_orthologs = absf_external("gene_orthologs_2022-09-09.gz")
 
 # dervied data
 relf_pubtator_gene_altnames = "pubtator_gene_altnames.gz"
+relf_mesh_to_unii = "mesh_to_unii.gz"
