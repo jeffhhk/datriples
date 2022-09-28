@@ -27,7 +27,9 @@ def absf_external(relf):
 
 absf_gene2pubtatorcentral = absf_external("gene2pubtatorcentral_2022-09-15.gz")
 absf_human_orthologs = absf_external("gene_orthologs_2022-09-09.gz")
+absf_chemical2pubtatorcentral = absf_external("chemical2pubtatorcentral_2022-08-05.gz")
 
 # dervied data
 relf_pubtator_gene_altnames = "pubtator_gene_altnames.gz"
+relf_pubtator_chem_altnames = "pubtator_chem_altnames.gz"
 relf_mesh_to_unii = "mesh_to_unii.gz"
