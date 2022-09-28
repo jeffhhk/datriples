@@ -1,6 +1,14 @@
+import os
+import sys
 import re
 import requests
 from tqdm import tqdm
+
+adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(adirProj)
+
+from lib.altname_paths import *
+from lib.diskgenmem import *
 
 # class SparqlResult():
 #     def __init__(self, value) -> None:
@@ -18,8 +26,8 @@ def sparql_query(url, prefix, query):
             break
         for x in r:
             yield x
-        if params['offset']>10000:
-            break
+        # if params['offset']>10000:
+        #     break
 
 def rdf_fd(x,fd):
     if x is None or fd not in x:
@@ -32,7 +40,7 @@ def val_rdf_fd(x,fd):
         return None
     return v["value"]
 
-def run_fetch_mesh_to_unii():
+def fetch_mesh_unii_raw():
     # inspired by:
     #     https://github.com/stuppie/semmed-biolink/blob/master/05-xrefs.ipynb
     # query
@@ -73,21 +81,33 @@ def run_fetch_mesh_to_unii():
 
     return sparql_query(URL, PREFIX, query)
 
-re_unii = re.compile('[0-9A-Z]{10}')
+re_unii = re.compile('^[0-9A-Z]{10}$')
 
 def is_unii(st):
     if not st:
         return False
     m = re_unii.match(st)
-    return m and m[0]==len(st)
+    return m[0] if m else None
+
+re_mesh = re.compile('([0-9A-Z]+)$')
+
+def meshid_find(st):
+    if not st:
+        return False
+    m = re_mesh.search(st)
+    return m[1] if m else None
 
 def filter_mesh_to_only_unii(mesh_to_unii):
-    print("hello __fetch_mesh_to_only_unii")
     for res in mesh_to_unii:
         r = val_rdf_fd(res,"r")
         rr = val_rdf_fd(res,"rr")
-        if is_unii(r):
-            yield {"unii":r}
-        elif is_unii(rr):
-            yield {"unii": rr}
+        if is_unii(r) or is_unii(rr):
+            yield {
+                "mesh": rdf_fd(res, "mesh"),
+                "meshLabel": rdf_fd(res, "meshLabel"),
+                "r": r if is_unii(r) else None,
+                "rr": rr if is_unii(rr) else None
+            }
 
+def gather_mesh_unii():
+    return filter_mesh_to_only_unii(fetch_mesh_unii_raw())
