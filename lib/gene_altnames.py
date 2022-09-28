@@ -3,6 +3,8 @@ import subprocess
 from tqdm import tqdm
 from lib.re_sub import *
 
+from lib.sessionize import *
+
 # zcat /data/gene2pubtatorcentral_2022-09-15.gz | pv | ~/bin/reservoir.pl 20
 #     34456932	Gene	838452	PYL9|RCAR1	GNormPlus
 #     10074924	Gene	2099	estrogen receptor	GNormPlus
@@ -49,20 +51,6 @@ def parse_gene_altnames_raw(relf):
     for line in proc.stdout:
         yield line.rstrip("\n").split("\t")
 
-def sessionize_by_pmid(relf):
-    pmidPrev=None
-    sess=[]
-    it = parse_gene_altnames_raw(relf)
-    it.__next__()               # TSV header
-    for row in it:
-        pmid=row[cidPmid]
-        if pmid != pmidPrev and len(sess)>0:
-            yield sess
-            sess=[]
-        pmidPrev=pmid
-        sess.append(row)
-    yield sess
-
 def does_row_contain_single_gene(row):
     geneid=row[cidGeneid]
     return (
@@ -86,9 +74,11 @@ def sess_dedupe(sess):
                 if (geneid, name) not in h:
                     h[(geneid,name)] = True
     return h.keys()
+        # except:
+        #     print("offending row: {}".format(row))
 
 def parse_gene_altnames(relf):
-    for sess in sessionize_by_pmid(relf):
+    for sess in sessionize_rows(lambda: parse_gene_altnames_raw(relf), cidPmid):
         sess2 = sess_dedupe(sess)
         for geneid_name in sess2:
             yield geneid_name
