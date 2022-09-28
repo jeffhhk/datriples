@@ -26,5 +26,7 @@ def absf_external(relf):
     return os.path.join(adirProj, "cache", "external", relf)
 
 absf_gene2pubtatorcentral = absf_external("gene2pubtatorcentral_2022-09-15.gz")
-absf_pubtator_gene_altnames = "pubtator_gene_altnames.gz"
 absf_human_orthologs = absf_external("gene_orthologs_2022-09-09.gz")
+
+# dervied data
+relf_pubtator_gene_altnames = "pubtator_gene_altnames.gz"

@@ -20,7 +20,7 @@ dmem = make_dmem()
 pubtator_gene_altnames = DictMem(lambda:
     dmem.cache(
         lambda: gather_pubtator_gene_altnames(absf_gene2pubtatorcentral, normalize_pubtator_gene_altname),
-        absf_pubtator_gene_altnames)())
+        relf_pubtator_gene_altnames)())
 
 def main():
     tmp=mytime(lambda: sum(1 for _ in pubtator_gene_altnames().keys()))
