@@ -83,22 +83,6 @@ def parse_gene_altnames(relf):
         for geneid_name in sess2:
             yield geneid_name
 
-def __count(T,k):
-#    k=(geneid,name)
-    if k not in T:
-        T[k]=1
-    else:
-        num = T[k]
-        T[k] = num+1
-
-def __add_multi_disjoint(T,k,v):
-    if k not in T:
-        T[k]=[v]
-    else:
-        vs = T[k]
-        vs.append(v)
-        T[k]=vs
-
 re_name=re.compile(r"[^\(\)a-zA-Z0-9]+")
 
 def normalize_pubtator_gene_altname(name):
@@ -111,17 +95,8 @@ def normalize_pubtator_gene_altname(name):
 # Group the data by geneid.  Report the results as a generator of (k,v) pairs so that they can
 # be cached with DiskgenMem.
 def gather_pubtator_gene_altnames(relf, fn_normalize):
-    h1={}
-    for (geneid, name) in tqdm(parse_gene_altnames(relf)):
-        nname = fn_normalize(name)
-        if len(nname)>0:
-            __count(h1, (geneid, fn_normalize(name)))
-    print("starting pass 2")
-    h2={}
-    for ((geneid, name),num) in tqdm(h1.items()):
-        __add_multi_disjoint(h2, geneid, (name,num))
-    print("starting pass 3")
-    for (geneid, vs) in sorted(h2.items()):
-        yield (geneid, sorted(vs, key=lambda v:-v[1]))
+    hgm = HistogramNamesByKey(parse_gene_altnames(relf), fn_normalize)
+    for (geneid, vs) in hgm.get():
+        yield (geneid,vs)
 
 
