@@ -101,13 +101,12 @@ def filter_mesh_to_only_unii(mesh_to_unii):
     for res in mesh_to_unii:
         r = val_rdf_fd(res,"r")
         rr = val_rdf_fd(res,"rr")
-        if is_unii(r) or is_unii(rr):
-            yield {
-                "mesh": val_rdf_fd(res, "mesh"),
-                "meshLabel": rdf_fd(res, "meshLabel"),
-                "r": r if is_unii(r) else None,
-                "rr": rr if is_unii(rr) else None
-            }
+        yield {
+            "mesh": val_rdf_fd(res, "mesh"),
+            "meshLabel": rdf_fd(res, "meshLabel"),
+            "r": r if is_unii(r) else None,
+            "rr": rr if is_unii(rr) else None
+        }
 
 def gather_mesh_unii():
     return filter_mesh_to_only_unii(fetch_mesh_unii_raw())

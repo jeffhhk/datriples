@@ -18,7 +18,7 @@ import random
 
 dmem = make_dmem()
 
-mesh_to_unii = dmem.cache(lambda: gather_mesh_unii()(), relf_mesh_to_unii)
+mesh_to_unii = dmem.cache(lambda: gather_mesh_unii(), relf_mesh_to_unii)
 
 mesh_to_only_unii = DictMem(lambda:
         ((meshid_find(x["mesh"]), x) for x in
@@ -40,10 +40,20 @@ def mesh_chem_altnames():
 
 
 def main():
-    print("mesh_chem_altnames with all uniis count={}".format(
+    print("pubtator chemicals count={}".format(
+        mytime(lambda: sum(1 for _ in pubtator_chem_altnames().keys()))))
+
+    print("chemical meshids count={}".format(
+        mytime(lambda: sum(1 for _ in mesh_to_only_unii.keys()))
+    ))
+
+    print("mesh_chem_altnames count={}".format(
         mytime(lambda: sum(1 for _ in mesh_chem_altnames()))))
 
-    print("mesh_chem_altnames with direct uniis count={}".format(
+    print("mesh_chem_altnames with any unii count={}".format(
+        mytime(lambda: sum(1 for (unii,unii2,meshid,vs) in mesh_chem_altnames() if unii is not None or unii2 is not None))))
+
+    print("mesh_chem_altnames with direct unii count={}".format(
         mytime(lambda: sum(1 for (unii,unii2,meshid,vs) in mesh_chem_altnames() if unii is not None))))
 
     for (unii,unii2,meshid,v) in reservoir(mesh_chem_altnames(), 20, random.Random(123)):

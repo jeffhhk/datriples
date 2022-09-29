@@ -12,7 +12,7 @@ from lib.mytime import *
 
 dmem = make_dmem()
 
-mesh_to_unii = dmem.cache(lambda: gather_mesh_unii()(), relf_mesh_to_unii)
+mesh_to_unii = dmem.cache(lambda: gather_mesh_unii(), relf_mesh_to_unii)
 
 mesh_to_only_unii = DictMem(lambda:
         ((meshid_find(x["mesh"]), x) for x in
