@@ -15,7 +15,7 @@ dmem = make_dmem()
 mesh_to_unii = dmem.cache(lambda: gather_mesh_unii()(), relf_mesh_to_unii)
 
 mesh_to_only_unii = DictMem(lambda:
-        ((meshid_find(x["mesh"]["value"]), x) for x in
+        ((meshid_find(x["mesh"]), x) for x in
             mesh_to_unii()))()
 
 print(mytime(lambda: sum(1 for _ in mesh_to_only_unii.keys())))

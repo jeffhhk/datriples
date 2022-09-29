@@ -103,7 +103,7 @@ def filter_mesh_to_only_unii(mesh_to_unii):
         rr = val_rdf_fd(res,"rr")
         if is_unii(r) or is_unii(rr):
             yield {
-                "mesh": rdf_fd(res, "mesh"),
+                "mesh": val_rdf_fd(res, "mesh"),
                 "meshLabel": rdf_fd(res, "meshLabel"),
                 "r": r if is_unii(r) else None,
                 "rr": rr if is_unii(rr) else None
