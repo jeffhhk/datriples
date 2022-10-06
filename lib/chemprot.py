@@ -8,9 +8,9 @@ def mkdirp_for(rfile):
 
 class Chemprot(object):
     def __init__(self) -> None:
-        self._abstracts={}             # id => {id:, title:, txt:}
-        self._entities_by_abstract={}  # id => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
-        self._rels={}                  # id => list({docid:, relid:, relclass:, relfoo:, rel_name:, entid_1: entid_2:})
+        self._abstracts={}             # docid => {id:, title:, txt:}
+        self._entities_by_abstract={}  # docid => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
+        self._rels={}                  # docid => list({docid:, relid:, relclass:, relfoo:, rel_name:, entid_1: entid_2:})
 
     def add_abstract(self,abstract):
         docid=abstract["id"]
