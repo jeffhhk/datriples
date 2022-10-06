@@ -82,23 +82,30 @@ class Chemprot(object):
                     "ich_stop":ich_stop
                 })
         with open(rfile_rel) as f:
+            docidPrev=None
+            relid=0
             for X in f:
                 X=X.rstrip()
                 X = X.split("\t")
                 docid = int(X[0])
-                relid = X[1]
+                relclass = X[1]
                 relfoo = X[2]
                 rel_name = X[3]
                 entid_1 = X[4][5:]
                 entid_2 = X[5][5:]
+                if docid!=docidPrev:
+                    relid=0
+                relid += 1
                 self.add_rel({
                     "docid":int(docid),
                     "relid":relid,
+                    "relclass":relclass,
                     "relfoo":relfoo,
                     "rel_name":rel_name,
                     "entid_1":entid_1,
                     "entid_2":entid_2
                 })
+                docidPrev=docid
 
     # Export data for brat labeling tool
     def export1(self):
