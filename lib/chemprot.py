@@ -146,13 +146,14 @@ class Chemprot(object):
         for ent in self.get_entities(docid):
             ich_start[ent["entid"]]=ent["ich_start"]
             ich_stop[ent["entid"]]=ent["ich_stop"]
+        # mnemonic: tb: "tiebreaker" - encourage rel/ent tags to be well-formed when possible
         return itertools.chain(
-            ({"ich":e["ich_start"], "end":"start", "type":"ent", "e":e} for e in self.get_entities(docid)),
-            ({"ich":e["ich_stop"], "end":"stop", "type":"ent", "e":e} for e in self.get_entities(docid)),
-            ({"ich":ich_start[e["entid_1"]], "end":"start", "type":"rel", "e":e} for e in self.get_rels(docid)),
-            ({"ich":ich_stop[e["entid_1"]], "end":"stop", "type":"rel", "e":e} for e in self.get_rels(docid)),
-            ({"ich":ich_start[e["entid_2"]], "end":"start", "type":"rel", "e":e} for e in self.get_rels(docid)),
-            ({"ich":ich_stop[e["entid_2"]], "end":"stop", "type":"rel", "e":e} for e in self.get_rels(docid))
+            ({"ich":e["ich_start"], "end":"start", "tb":2, "type":"ent", "e":e} for e in self.get_entities(docid)),
+            ({"ich":e["ich_stop"], "end":"stop", "tb":3, "type":"ent", "e":e} for e in self.get_entities(docid)),
+            ({"ich":ich_start[e["entid_1"]], "end":"start", "tb":1, "type":"rel", "e":e} for e in self.get_rels(docid)),
+            ({"ich":ich_stop[e["entid_1"]], "end":"stop", "tb":4, "type":"rel", "e":e} for e in self.get_rels(docid)),
+            ({"ich":ich_start[e["entid_2"]], "end":"start", "tb":1, "type":"rel", "e":e} for e in self.get_rels(docid)),
+            ({"ich":ich_stop[e["entid_2"]], "end":"stop", "tb":4, "type":"rel", "e":e} for e in self.get_rels(docid))
             )
 
     # Export xml-shaped data for 3 stage triple extraction
@@ -168,7 +169,7 @@ class Chemprot(object):
                 txt=abstract["title"]+"\t"+abstract["txt"]
                 evs=sorted(
                     self.events(docid),
-                    key=lambda entity: entity["ich"])
+                    key=lambda entity: (entity["ich"], entity["tb"]))
                 ichL=0
                 for ev in evs:
                     ichR=ev["ich"]
