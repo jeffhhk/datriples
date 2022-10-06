@@ -2,6 +2,7 @@ import sys
 import json
 import os
 from xml.sax.saxutils import escape
+import itertools
 
 def mkdirp_for(rfile):
     os.makedirs(os.path.dirname(rfile), exist_ok=True)
@@ -139,6 +140,21 @@ class Chemprot(object):
                     f.write("\n")
             # TODO: emit relations
 
+    def events(self, docid):
+        ich_start={}
+        ich_stop={}
+        for ent in self.get_entities(docid):
+            ich_start[ent["entid"]]=ent["ich_start"]
+            ich_stop[ent["entid"]]=ent["ich_stop"]
+        return itertools.chain(
+            ({"ich":e["ich_start"], "end":"start", "type":"ent", "e":e} for e in self.get_entities(docid)),
+            ({"ich":e["ich_stop"], "end":"stop", "type":"ent", "e":e} for e in self.get_entities(docid)),
+            ({"ich":ich_start[e["entid_1"]], "end":"start", "type":"rel", "e":e} for e in self.get_rels(docid)),
+            ({"ich":ich_stop[e["entid_1"]], "end":"stop", "type":"rel", "e":e} for e in self.get_rels(docid)),
+            ({"ich":ich_start[e["entid_2"]], "end":"start", "type":"rel", "e":e} for e in self.get_rels(docid)),
+            ({"ich":ich_stop[e["entid_2"]], "end":"stop", "type":"rel", "e":e} for e in self.get_rels(docid))
+            )
+
     # Export xml-shaped data for 3 stage triple extraction
     def export2(self,rfileOut):
         mkdirp_for(rfileOut)
@@ -150,19 +166,20 @@ class Chemprot(object):
                 f.write("<title>{}</title>".format(escape(abstract["title"])))
                 f.write("<text>")
                 txt=abstract["title"]+"\t"+abstract["txt"]
-                entities=sorted(
-                    (self._entities_by_abstract[docid] if docid in self._entities_by_abstract else []),
-                    key=lambda entity: entity["ich_start"])
+                evs=sorted(
+                    self.events(docid),
+                    key=lambda entity: entity["ich"])
                 ichL=0
-                for entity in entities:
-                    ichR=entity["ich_start"]
-                    ichRR=entity["ich_stop"]
-                    n=entity["ent_name"]
+                for ev in evs:
+                    ichR=ev["ich"]
+                    n=ev["type"]
+                    # TODO?: ev["e"]["ent_name"]
                     f.write(escape(txt[ichL:ichR]))
-                    f.write("<{}>".format(escape(n)))
-                    f.write(escape(txt[ichR:ichRR]))
-                    f.write("</{}>".format(escape(n)))
-                    ichL=ichRR
+                    stSlash="/" if ev["end"]=="stop" else ""
+                    stId=ev["e"]["relid"] if ev["type"]=="rel" else ev["e"]["entid"]
+                    stClass=ev["e"]["relclass"] if ev["type"]=="rel" else ev["e"]["ent_name"]
+                    f.write("<{}{} {}id=\"{}\" class=\"{}\">".format(stSlash, n, n, stId, stClass))
+                    ichL=ichR
                 f.write(escape(txt[ichL:]))
                 f.write("</text></doc>\n")
             f.write("</xml>\n")
