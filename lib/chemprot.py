@@ -10,7 +10,7 @@ class Chemprot(object):
     def __init__(self) -> None:
         self._abstracts={}             # id => {id:, title:, txt:}
         self._entities_by_abstract={}  # id => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
-        self._rels=[]                  # list({docid:, relid:, relfoo:, rel_name:, entid_1: entid_2:})
+        self._rels={}                  # id => list({docid:, relid:, relclass:, relfoo:, rel_name:, entid_1: entid_2:})
 
     def add_abstract(self,abstract):
         docid=abstract["id"]
@@ -33,7 +33,18 @@ class Chemprot(object):
         self._entities_by_abstract[docid]=v
     
     def add_rel(self,rel):
-        self._rels.append(rel)
+        docid=rel["docid"]
+        v=[]
+        if docid in self._rels:
+            v=self._rels[docid]
+        v.append(rel)
+        self._rels[docid]=v
+
+    def get_rels(self,docid):
+        return [] if docid not in self._rels else self._rels[docid]
+
+    def get_entities(self,docid):
+        return [] if docid not in self._entities_by_abstract else self._entities_by_abstract[docid]
 
     def load(self, rfile_abstracts, rfile_entities, rfile_rel):
         rfile_abstracts = rfile_abstracts
