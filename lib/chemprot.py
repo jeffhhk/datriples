@@ -1,6 +1,36 @@
 import sys
 import json
 import os
+from collections import namedtuple
+
+class Doc(namedtuple('Doc', [
+    'id',
+    'title',
+    'txt'
+])):
+    pass
+
+class Ent(namedtuple('Ent', [
+    'docid',     # 1322047
+    'entid',     # T1
+    'classid',  # CHEMICAL
+    'ich_start', # 1138
+    'ich_stop'   # 1179
+])):
+    pass
+
+class Rel(namedtuple('Rel', [
+    'docid',     # 1322047
+    'relid',     # auto-incremented
+    'classid',   # CPR:3
+    'relfoo',    # Y
+    'classname', # ACTIVATOR
+    'entid1',    # Arg1:T12
+    'entid2'     # Arg2:T17
+])):
+    pass
+
+
 
 def mkdirp_for(rfile):
     os.makedirs(os.path.dirname(rfile), exist_ok=True)
@@ -12,11 +42,11 @@ class Chemprot(object):
         self._rels={}                  # docid => list({docid:, relid:, relclass:, relfoo:, classname:, entid_1: entid_2:})
 
     def add_abstract(self,abstract):
-        docid=abstract["id"]
+        docid=abstract.id
         self._abstracts[docid]=abstract
 
     def add_entity(self,entity):
-        docid=entity["docid"]
+        docid=entity.docid
         v=[]
         if docid in self._entities:
             v=self._entities[docid]
@@ -24,7 +54,7 @@ class Chemprot(object):
         self._entities[docid]=v
     
     def add_rel(self,rel):
-        docid=rel["docid"]
+        docid=rel.docid
         v=[]
         if docid in self._rels:
             v=self._rels[docid]
@@ -50,11 +80,11 @@ class Chemprot(object):
                 txt = X[2]
                 if docid in self._abstracts:
                     raise "Found duplicate abstract id={}".format(docid)
-                self.add_abstract({
-                    "id":docid,
-                    "title":title,
-                    "txt":txt
-                })
+                self.add_abstract(Doc(
+                    docid,
+                    title,
+                    txt
+                ))
         with open(rfile_entities) as f:
             for X in f:
                 X=X.rstrip()
@@ -64,13 +94,13 @@ class Chemprot(object):
                 classid = X[2]
                 ich_start = int(X[3])
                 ich_stop = int(X[4])
-                self.add_entity({
-                    "docid":docid,
-                    "entid":entid,
-                    "classid":classid,
-                    "ich_start":ich_start,
-                    "ich_stop":ich_stop
-                })
+                self.add_entity(Ent(
+                    docid,
+                    entid,
+                    classid,
+                    ich_start,
+                    ich_stop
+                ))
         with open(rfile_rel) as f:
             docidPrev=None
             relid=0
@@ -86,15 +116,15 @@ class Chemprot(object):
                 if docid!=docidPrev:
                     relid=0
                 relid += 1
-                self.add_rel({
-                    "docid":int(docid),
-                    "relid":relid,
-                    "relclass":relclass,
-                    "relfoo":relfoo,
-                    "classname":classname,
-                    "entid_1":entid_1,
-                    "entid_2":entid_2
-                })
+                self.add_rel(Rel(
+                    int(docid),
+                    relid,
+                    relclass,
+                    relfoo,
+                    classname,
+                    entid_1,
+                    entid_2
+                ))
                 docidPrev=docid
 
     # Export data for brat labeling tool
@@ -105,9 +135,9 @@ class Chemprot(object):
         with open(fnOutTxt,"w") as f:
             for docid in sorted(self._abstracts.keys()):
                 abstract=self._abstracts[docid]
-                f.write(abstract["title"])
+                f.write(abstract.title)
                 f.write("\n")
-                f.write(abstract["txt"])
+                f.write(abstract.txt)
                 f.write("\n")
         mkdirp_for(fnOutAnn)
         with open(fnOutAnn,"w") as f:
