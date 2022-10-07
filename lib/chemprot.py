@@ -15,14 +15,6 @@ class Chemprot(object):
         docid=abstract["id"]
         self._abstracts[docid]=abstract
 
-    def number_abstracts(self):
-        ich = 0
-        for k in sorted(self._abstracts.keys()):
-            abstract=self._abstracts[k]
-            abstract["ich"]=ich
-            txt=abstract["txt"]
-            ich += len(txt)+1   # 1 for size of EOL
-
     def add_entity(self,entity):
         docid=entity["docid"]
         v=[]
@@ -63,7 +55,6 @@ class Chemprot(object):
                     "title":title,
                     "txt":txt
                 })
-        self.number_abstracts()
         with open(rfile_entities) as f:
             for X in f:
                 X=X.rstrip()
@@ -138,60 +129,5 @@ class Chemprot(object):
                     f.write("\n")
             # TODO: emit relations
 
-
-    # From BLUE_Benchmark/blue/bert/create_cdr_bert.py
-    def _find_toks(self, sentences, start, end):
-        toks = []
-        for sentence in sentences:
-            for ann in sentence.annotations:
-                span = ann.total_span
-                if start <= span.offset and span.offset + span.length <= end:
-                    toks.append(ann)
-                elif span.offset <= start and end <= span.offset + span.length:
-                    toks.append(ann)
-        return toks
-
-    # # Export data formatted for run_bluebert_ner.py task_name=bc5cdr (BC5CDRProcessor)
-    # # Ported from BLUE_Benchmark/blue/bert/create_cdr_bert.py
-    #
-    # from blue.ext.preprocessing import tokenize_text, print_ner_debug, write_bert_ner_file
-    #
-    # def export3(self,rfileOut):
-    #     validate_mentions=None
-    #     mkdirp_for(rfileOut)
-    #     total_sentences = []
-
-    #     for docid in tqdm.tqdm(sorted(self._abstracts.keys())):
-    #         abstract=self._abstracts[docid]
-    #         txt=abstract["title"]+"\t"+abstract["txt"]
-    #         entities=sorted(
-    #             (self._entities[docid] if docid in self._entities_by_abstract else []),
-    #             key=lambda entity: entity["ich_start"])
-
-    #         sents = tokenize_text(txt, docid)
-
-    #         ichL=0
-    #         for entity in entities:
-    #             #if ann.type == entity_type:    # entity["classid"]
-    #             anns = self._find_toks(sents, entity["ich_start"], entity["ich_stop"])
-    #             if len(anns) == 0:
-    #                 print(f'Cannot find {doc.pmid}: {ann}')
-    #                 print_ner_debug(sents, ann.start, ann.end)
-    #                 exit(1)
-    #             has_first = False
-    #             for ann in anns:
-    #                 if not has_first:
-    #                     ann.infons['NE_label'] = 'B'
-    #                     has_first = True
-    #                 else:
-    #                     ann.infons['NE_label'] = 'I'
-
-    #         total_sentences.extend(sents)
-
-    #     cnt = write_bert_ner_file(rfileOut, total_sentences)
-    #     if validate_mentions is not None and validate_mentions != cnt:
-    #         print(f'Should have {validate_mentions}, but have {cnt} {entity_type} mentions')
-    #     else:
-    #         print(f'Have {cnt} mentions')
 
 
