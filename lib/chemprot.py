@@ -9,7 +9,7 @@ class Chemprot(object):
     def __init__(self) -> None:
         self._abstracts={}             # docid => {id:, title:, txt:}
         self._entities={}  # docid => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
-        self._rels={}                  # docid => list({docid:, relid:, relclass:, relfoo:, rel_name:, entid_1: entid_2:})
+        self._rels={}                  # docid => list({docid:, relid:, relclass:, relfoo:, classname:, entid_1: entid_2:})
 
     def add_abstract(self,abstract):
         docid=abstract["id"]
@@ -89,7 +89,7 @@ class Chemprot(object):
                 docid = int(X[0])
                 relclass = X[1]
                 relfoo = X[2]
-                rel_name = X[3]
+                classname = X[3]
                 entid_1 = X[4][5:]
                 entid_2 = X[5][5:]
                 if docid!=docidPrev:
@@ -100,7 +100,7 @@ class Chemprot(object):
                     "relid":relid,
                     "relclass":relclass,
                     "relfoo":relfoo,
-                    "rel_name":rel_name,
+                    "classname":classname,
                     "entid_1":entid_1,
                     "entid_2":entid_2
                 })
