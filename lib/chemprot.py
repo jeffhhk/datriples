@@ -10,7 +10,7 @@ def mkdirp_for(rfile):
 class Chemprot(object):
     def __init__(self) -> None:
         self._abstracts={}             # docid => {id:, title:, txt:}
-        self._entities_by_abstract={}  # docid => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
+        self._entities={}  # docid => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
         self._rels={}                  # docid => list({docid:, relid:, relclass:, relfoo:, rel_name:, entid_1: entid_2:})
 
     def add_abstract(self,abstract):
@@ -28,10 +28,10 @@ class Chemprot(object):
     def add_entity(self,entity):
         docid=entity["docid"]
         v=[]
-        if docid in self._entities_by_abstract:
-            v=self._entities_by_abstract[docid]
+        if docid in self._entities:
+            v=self._entities[docid]
         v.append(entity)
-        self._entities_by_abstract[docid]=v
+        self._entities[docid]=v
     
     def add_rel(self,rel):
         docid=rel["docid"]
@@ -45,7 +45,7 @@ class Chemprot(object):
         return [] if docid not in self._rels else self._rels[docid]
 
     def get_entities(self,docid):
-        return [] if docid not in self._entities_by_abstract else self._entities_by_abstract[docid]
+        return [] if docid not in self._entities else self._entities[docid]
 
     def load(self, rfile_abstracts, rfile_entities, rfile_rel):
         rfile_abstracts = rfile_abstracts
@@ -123,7 +123,7 @@ class Chemprot(object):
         mkdirp_for(fnOutAnn)
         with open(fnOutAnn,"w") as f:
             for docid in sorted(self._abstracts.keys()):
-                for entity in sorted(self._entities_by_abstract[docid], key=lambda e:e["ich_start"]):
+                for entity in sorted(self._entities[docid], key=lambda e:e["ich_start"]):
                     abstract=self._abstracts[docid]
                     ich=abstract["ich"]
                     ich_start=ich+entity["ich_start"]
@@ -211,7 +211,7 @@ class Chemprot(object):
     #         abstract=self._abstracts[docid]
     #         txt=abstract["title"]+"\t"+abstract["txt"]
     #         entities=sorted(
-    #             (self._entities_by_abstract[docid] if docid in self._entities_by_abstract else []),
+    #             (self._entities[docid] if docid in self._entities_by_abstract else []),
     #             key=lambda entity: entity["ich_start"])
 
     #         sents = tokenize_text(txt, docid)
