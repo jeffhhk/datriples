@@ -7,6 +7,7 @@ adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 sys.path.append(adirProj)
 
 from lib.chemprot import Chemprot
+from lib.nerre_xml import NerreXml
 
 def run_main():
     rfileA=os.path.join(adirProj, "status_quo/chemprot_test_gs/chemprot_test_abstracts_gs.tsv")
@@ -14,7 +15,7 @@ def run_main():
     rfileR=os.path.join(adirProj, "status_quo/chemprot_test_gs/chemprot_test_relations_gs.tsv")
     cp=Chemprot()
     cp.load(rfileA, rfileE, rfileR)
-    cp.export2("/dev/stdout")
+    NerreXml().write(cp, "/dev/stdout")
 
 if __name__ == '__main__':
     run_main()
