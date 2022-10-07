@@ -6,12 +6,23 @@ def _find_hdr(hdr, hdrsFound):
 
 """
 hmap_build: build an integer header map to find a list of subscribed columns among a list of found columns.
+A streaming-friendly alternative to DataFrame.
 
 Example:
 
     hmap_build(["orange","watermelon"],["apple","watermelon","orange","bananna"])
 
     returns: [2,1]
+
+Then use the hmap to parse a split delimited list of fields F using e.g.:
+
+    [F[hmap[i]] for i in range(0,len(hmap))]
+
+so that:
+
+    F[0] == "orange"
+    F[1] == "watermelon"
+
 """
 
 def hmap_build(hdrsSub, hdrsFound):

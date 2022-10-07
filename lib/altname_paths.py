@@ -25,9 +25,22 @@ def make_dmem():
 def absf_external(relf):
     return os.path.join(adirProj, "cache", "external", relf)
 
+"""
+TODO: download automatically.
+These otherwise reputable upstream sources don't version or archive their data.
+When downloading automatically, compute a digest of identifiable info, like
+retrieval date, sha1sum, row count, byte count.  pmid max is also a rough proxy
+for timestamp.  That way we can report a signature for the data our system
+consumed.
+"""
+
+# from https://ftp.ncbi.nlm.nih.gov/pub/lu/PubTatorCentral/gene2pubtatorcentral.gz
 absf_gene2pubtatorcentral = absf_external("gene2pubtatorcentral_2022-09-15.gz")
+# from https://ftp.ncbi.nih.gov/gene/DATA/gene_orthologs.gz
 absf_human_orthologs = absf_external("gene_orthologs_2022-09-09.gz")
+# from https://ftp.ncbi.nlm.nih.gov/pub/lu/PubTatorCentral/chemical2pubtatorcentral.gz
 absf_chemical2pubtatorcentral = absf_external("chemical2pubtatorcentral_2022-08-05.gz")
+
 
 # dervied data
 relf_pubtator_gene_altnames = "pubtator_gene_altnames.gz"
