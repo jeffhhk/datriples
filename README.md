@@ -15,7 +15,7 @@ The library lib/diskgenmem.py provides caching of previously computed streams, w
 
 Each program under bin/ determines the project directory from the program location, appending sys.path so that namespaces can be referred to from the project directory.
 
-Currently external upstream data is manually downloaded, listed in lib/altname_paths.py.
+Currently external upstream data is manually downloaded, listed in lib/resource/altname_paths.py.
 
 ## Code directories
 
