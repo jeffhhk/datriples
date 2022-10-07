@@ -7,9 +7,9 @@ import re
 adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(adirProj)
 
-from lib.altname_paths import *
+from lib.resource.altname_paths import *
 from lib.diskgenmem import *
-from lib.gene_altnames import *
+from lib.resource.gene_altnames import *
 from lib.mytime import *
 from lib.re_sub import sub_all_plain_string
 from lib.reservoir import reservoir

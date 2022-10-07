@@ -6,8 +6,8 @@ import itertools
 adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(adirProj)
 
-from lib.altname_paths import *
-from lib.orthologs import *
+from lib.resource.altname_paths import *
+from lib.resource.orthologs import *
 from lib.mytime import *
 
 def main():

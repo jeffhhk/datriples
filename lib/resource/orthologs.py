@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-from .hmap import *
+from ..hmap import *
 from collections import namedtuple
 
 # https://ftp.ncbi.nih.gov/gene/DATA/gene_orthologs.gz

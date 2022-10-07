@@ -5,9 +5,9 @@ import sys
 adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(adirProj)
 
-from lib.altname_paths import *
+from lib.resource.altname_paths import *
 from lib.diskgenmem import *
-from lib.fetch_mesh_to_unii import *
+from lib.resource.fetch_mesh_to_unii import *
 from lib.mytime import *
 
 dmem = make_dmem()

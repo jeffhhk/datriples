@@ -7,10 +7,10 @@ import re
 adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(adirProj)
 
-from lib.altname_paths import *
+from lib.resource.altname_paths import *
 from lib.diskgenmem import *
-from lib.chem_altnames import *
-from lib.fetch_mesh_to_unii import *
+from lib.resource.chem_altnames import *
+from lib.resource.fetch_mesh_to_unii import *
 from lib.mytime import *
 from lib.re_sub import sub_all_plain_string
 from lib.reservoir import reservoir

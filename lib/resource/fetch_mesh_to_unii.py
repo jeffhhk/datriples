@@ -4,11 +4,8 @@ import re
 import requests
 from tqdm import tqdm
 
-adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(adirProj)
-
-from lib.altname_paths import *
-from lib.diskgenmem import *
+from .altname_paths import *
+from ..diskgenmem import *
 
 # class SparqlResult():
 #     def __init__(self, value) -> None:

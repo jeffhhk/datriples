@@ -16,8 +16,7 @@ parameters must be bound to fully determine a path.
 All other modules are free to freely reference these identifiers so long as they are properly associated with regeneration.
 """
 
-adirProj=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(adirProj)
+adirProj=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def make_dmem():
     return DiskgenMem(os.path.join(adirProj, "cache", "managed", "derived"))
