@@ -8,7 +8,7 @@ def mkdirp_for(rfile):
 class Chemprot(object):
     def __init__(self) -> None:
         self._abstracts={}             # docid => {id:, title:, txt:}
-        self._entities={}  # docid => list({docid:, entid:, ent_name:, ich_start:, ich_stop:})
+        self._entities={}  # docid => list({docid:, entid:, classid:, ich_start:, ich_stop:})
         self._rels={}                  # docid => list({docid:, relid:, relclass:, relfoo:, classname:, entid_1: entid_2:})
 
     def add_abstract(self,abstract):
@@ -70,13 +70,13 @@ class Chemprot(object):
                 X = X.split("\t")
                 docid = int(X[0])
                 entid = X[1]
-                ent_name = X[2]
+                classid = X[2]
                 ich_start = int(X[3])
                 ich_stop = int(X[4])
                 self.add_entity({
                     "docid":docid,
                     "entid":entid,
-                    "ent_name":ent_name,
+                    "classid":classid,
                     "ich_start":ich_start,
                     "ich_stop":ich_stop
                 })
@@ -129,7 +129,7 @@ class Chemprot(object):
                     personid_bogus="NTL"
                     e=[
                         entity["entid"],
-                        entity["ent_name"],
+                        entity["classid"],
                         str(ich_start),
                         str(ich_stop),
                         personid_bogus
@@ -172,7 +172,7 @@ class Chemprot(object):
 
     #         ichL=0
     #         for entity in entities:
-    #             #if ann.type == entity_type:    # entity["ent_name"]
+    #             #if ann.type == entity_type:    # entity["classid"]
     #             anns = self._find_toks(sents, entity["ich_start"], entity["ich_stop"])
     #             if len(anns) == 0:
     #                 print(f'Cannot find {doc.pmid}: {ann}')

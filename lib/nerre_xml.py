@@ -43,11 +43,11 @@ class NerreXml():
                 for ev in evs:
                     ichR=ev["ich"]
                     n=ev["type"]
-                    # TODO?: ev["e"]["ent_name"]
+                    # TODO?: ev["e"]["classid"]
                     f.write(escape(txt[ichL:ichR]))
                     stSlash="/" if ev["end"]=="stop" else ""
                     stId=ev["e"]["relid"] if ev["type"]=="rel" else ev["e"]["entid"]
-                    stClass=ev["e"]["relclass"] if ev["type"]=="rel" else ev["e"]["ent_name"]
+                    stClass=ev["e"]["relclass"] if ev["type"]=="rel" else ev["e"]["classid"]
                     f.write("<{}{} {}id=\"{}\" class=\"{}\">".format(stSlash, n, n, stId, stClass))
                     ichL=ichR
                 f.write(escape(txt[ichL:]))
